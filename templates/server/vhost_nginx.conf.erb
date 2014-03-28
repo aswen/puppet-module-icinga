@@ -1,0 +1,83 @@
+# == Template: icinga::server::vhost_nginx.conf
+#
+# This is an example of what your webserverconfig could look like
+#
+# Please be aware that the configuration below is no more than an example of
+# how an icinga vhost could be used in an already properly configured webserver.
+# That webserver should be properly secured and configured before it connected
+# to internet of even another network.
+# Warning: a weak monitoring server is like a wiki (thus very valuable) for any
+# hacker. It may even function as a steppingstone into other systems should any
+# vuln of nrpe or any other system be abused.
+#
+# === Usage
+# before using this you should take care of the following:
+#
+# Apache has native support for cgi execution, nginx hasn't.
+# That means that one needs to add this to nginx and how to do that is
+# outside the scope of this documentation. A good read might be:
+# http://wiki.nginx.org/FcgiExample
+#
+# If the above has been taken care of you may create a copy of
+# this file in your sites-available directory.
+#
+# === Authors
+#
+# Nedap Steppingstone <steppingstone@nedap.com>
+#
+# === Copyright
+#
+# Copyright 2012, 2013 Nedap Steppingstone.
+#
+server {
+  listen <%= @icinga_webserver_port %>;
+  server_name <%= @icinga_vhostname %>;
+
+  access_log <%= @d_webserver_log %>/<%= @icinga_vhostname %>-access.log combined;
+  error_log  <%= @d_webserver_log %>/<%= @icinga_vhostname %>-error.log error;
+
+  auth_basic "Monitor Access";
+  auth_basic_user_file <%= @f_htpasswd %>;
+
+  location / {
+    root <%= @d_htdocs %>;
+    index index.html;
+  }
+
+  location ~ ^/icinga(.*)$ {
+    rewrite ^/icinga/(.*) /$1 last;
+    return 301;
+  }
+
+  location /stylesheets {
+    alias <%= @d_stylesheets %>;
+  }
+
+  location ~ /\. {
+    deny all;
+    access_log off;
+    log_not_found off;
+  }
+
+  location ~ \.cgi$ {
+    root <%= @d_cgi %>;
+    rewrite ^/cgi-bin/icinga/(.*)\.cgi /$1.cgi break;
+    include conf.d/fastcgi.params;
+    fastcgi_pass unix:/var/run/fcgiwrap.socket;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param AUTH_USER $remote_user;
+    fastcgi_param REMOTE_USER $remote_user;
+  }
+
+  location ~ ^/icinga-api/(.+\.php)$ {
+    root <%= @d_htdocs %>;
+    try_files $uri =404;
+    include conf.d/fastcgi.params;
+    fastcgi_pass 127.0.0.1:<%= @icinga_webserver_port %>;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param AUTH_USER $remote_user;
+    fastcgi_param REMOTE_USER $remote_user;
+  }
+
+}

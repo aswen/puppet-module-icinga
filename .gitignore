@@ -1,0 +1,36 @@
+.rvmrc
+*.un~
+.DS_Store
+.bundle
+vendor
+.rbenv-version
+.ruby-version
+.idea
+results
+tags
+.*.sw[op]
+ext/packaging
+pkg
+test.pp
+# Now that there is a gemfile, RVM ignores rvmrc in parent directories, so a local one is required
+# to work around that.  Which we don't want committed, so we can ignore it here.
+/.rvmrc
+*.gem
+*.rbc
+bin
+.config
+coverage
+InstalledFiles
+lib/bundler/man
+rdoc
+spec/reports
+spec/fixtures
+fixtures
+test/tmp
+test/version_tmp
+tmp
+# YARD artifacts
+.yardoc
+_yardoc
+doc/
+.ruby-gemset

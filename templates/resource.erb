@@ -1,0 +1,75 @@
+<% if @type == 'host'
+  @icinga_config['name'] = @title if @icinga_config['name'].nil?
+  @icinga_config['host_name'] = @title if @icinga_config['host_name'].nil?
+  @icinga_config['address'] = @title if @icinga_config['address'].nil?
+  if @icinga_config['icon_image_alt'].nil?
+    if !@icinga_config['alias'].nil?
+      @icinga_config['icon_image_alt'] = @icinga_config['alias'].capitalize
+    else
+      @icinga_config['icon_image_alt'] = @title.capitalize
+    end
+  end
+  @icinga_config['alias'] = @title if @icinga_config['alias'].nil?
+end #ends if type
+-%>
+<% if @type == 'service'
+  @icinga_config['name'] = @title if @icinga_config['name'].nil?
+  if @icinga_config['icon_image_alt'].nil?
+    if !@icinga_config['service_description'].nil?
+      @icinga_config['icon_image_alt'] = @icinga_config['service_description'].capitalize
+    else
+      @icinga_config['icon_image_alt'] = @title.capitalize
+    end
+  end
+  if @icinga_config['display_name'].nil?
+    if !@icinga_config['service_description'].nil?
+      @icinga_config['display_name'] = @icinga_config['service_description'].capitalize
+    else
+      @icinga_config['display_name'] = @title.capitalize
+    end
+  end
+  @icinga_config['service_description'] = @title if @icinga_config['service_description'].nil?
+end #ends if type
+-%>
+<% if @type == 'hostdependency'
+  @icinga_config['name'] = @title if @icinga_config['name'].nil?
+end #ends if type
+-%>
+<% if @type == 'hostgroup'
+  @icinga_config['hostgroup_name'] = @title if @icinga_config['hostgroup_name'].nil?
+  @icinga_config['alias'] = @title.capitalize if @icinga_config['alias'].nil?
+end #ends if type
+-%>
+<% if @type == 'servicegroup'
+  @icinga_config['servicegroup_name'] = @title if @icinga_config['servicegroup_name'].nil?
+  @icinga_config['alias'] = @title.capitalize if @icinga_config['alias'].nil?
+end #ends if type
+-%>
+<% if @type == 'contactgroup'
+  @icinga_config['contactgroup_name'] = @title if @icinga_config['contactgroup_name'].nil?
+  @icinga_config['alias'] = @title.capitalize if @icinga_config['alias'].nil?
+end #ends if type
+-%>
+<% if @type == 'command'
+  @icinga_config['command_name'] = @title if @icinga_config['command_name'].nil?
+end #ends if type
+-%>
+<% if @type == 'contact'
+  @icinga_config['contact_name'] = @title if @icinga_config['contact_name'].nil?
+  @icinga_config['alias'] = @title.split(" ").map(&:capitalize).join(" ") if @icinga_config['alias'].nil?
+  @icinga_config['name'] = @title if @icinga_config['name'].nil?
+end #ends if type
+-%>
+<% if @type == 'timeperiod'
+  @icinga_config['timeperiod_name'] = @title if @icinga_config['timeperiod_name'].nil?
+  @icinga_config['alias'] = @title.capitalize if @icinga_config['alias'].nil?
+  @icinga_config['name'] = @title if @icinga_config['name'].nil?
+end #ends if type
+-%>
+
+<% tab_width= @icinga_config.keys.map(&:length).max + 1 %>
+define <%= @type %> {
+<% @icinga_config.each do |key,value| -%>
+  <%= key %><%= ' '*(tab_width-key.length) %><%= value %>
+<% end #closes icinga_config.each do -%>
+}

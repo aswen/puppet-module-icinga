@@ -1,0 +1,5 @@
+fixtures:
+  symlinks:
+    icinga: "#{source_dir}"
+    stdlib: "#{source_dir}/../stdlib"
+    concat: "#{source_dir}/../concat_native"

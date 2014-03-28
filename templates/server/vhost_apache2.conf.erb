@@ -1,0 +1,61 @@
+# == Template: icinga::server::vhost_apache2.conf
+#
+# This is an example of what your webserverconfig could look like
+#
+# Please be aware that the configuration below is no more than an example of
+# how an icinga vhost could be used in an already properly configured webserver.
+# That webserver should be properly secured and configured before it connected
+# to internet of even another network.
+# Warning: a weak monitoring server is like a wiki (thus very valuable) for any
+# hacker. It may even function as a steppingstone into other systems should any
+# vuln of nrpe or any other system be abused.
+#
+# === Usage
+# before using this you should take care of the following:
+#
+# apache has to have something like this:
+# ports.conf: line stating the listen port
+# example
+# Listen: <%= @icinga_webserver_port %>
+#
+# somewhere in the global apache config the namevirtualhost should be declared:
+# namevirtualhost <%= @icinga_vhostname %>:<%= @icinga_webserver_port %>
+#
+# If the above has been taken care of you may create a copy of
+# this file in your sites-available directory.
+#
+# === Authors
+#
+# Nedap Steppingstone <steppingstone@nedap.com>
+#
+# === Copyright
+#
+# Copyright 2012, 2013 Nedap Steppingstone.
+#
+<VirtualHost <%= @icinga_vhostname %>:<%= @icinga_webserver_port %>>
+  CustomLog <%= @d_webserver_log %>/<%= @icinga_vhostname %>-access.log combined
+  ErrorLog  <%= @d_webserver_log %>/<%= @icinga_vhostname %>-error.log
+  LogLevel warn
+
+  RewriteEngine On
+  RewriteRule ^/icinga/(.*)$ /$1 [L,R=301]
+
+  ScriptAlias /cgi-bin/icinga <%= @d_cgi %>
+
+  Alias /stylesheets <%= @d_stylesheets %>
+
+  DocumentRoot <%= @d_htdocs %>
+  <DirectoryMatch (<%= @d_htdocs %>|<%= @d_cgi %>|<%= @d_stylesheets %>)>
+    Options FollowSymLinks
+    DirectoryIndex index.html
+    AllowOverride AuthConfig
+    Order Allow,Deny
+    Allow From All
+
+    AuthName "Monitor Access"
+    AuthType Basic
+    AuthUserFile <%= @f_htpasswd %>
+    require valid-user
+  </DirectoryMatch>
+
+</VirtualHost>
