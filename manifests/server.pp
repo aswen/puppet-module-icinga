@@ -36,7 +36,7 @@ class icinga::server (
   $icinga_vhostname           = '',
   $icinga_webserver           = 'apache2',
   $icinga_webserver_port      = 9000,
-  $dir_webserver_log          = "/var/log/${icinga_webserver}",
+  $dir_webserver_log          = $::icinga::server::params::dir_icinga_log,
 
   $package_nrpe_plugin      = $::icinga::server::params::package_nrpe_plugin,
   $package_icinga           = $::icinga::server::params::package_icinga,
