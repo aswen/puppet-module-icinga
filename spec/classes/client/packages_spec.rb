@@ -15,9 +15,6 @@ describe 'icinga::client::packages' do
     should contain_class('icinga::client::packages')
   end
 
-  it 'should install libnagios-plugin-perl' do
-  end
-
   it 'should install nagios-nrpe-server' do
     should contain_package(params[:p_nagios_nrpe_server]).with({
       :ensure  => 'latest',
