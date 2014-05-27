@@ -276,6 +276,7 @@ class icinga::server::configs (
     group   => root,
     recurse => true,
     purge   => true,
+    force   => true,
     notify  => Class['icinga::server::services'],
   }
 
@@ -309,6 +310,7 @@ class icinga::server::configs (
     group   => root,
     recurse => true,
     purge   => true,
+    force   => true,
     notify  => Class['icinga::server::services'],
   }
 
@@ -326,6 +328,7 @@ class icinga::server::configs (
     group   => root,
     recurse => true,
     purge   => true,
+    force   => true,
     notify  => Class['icinga::server::services'],
   }
 
@@ -336,6 +339,7 @@ class icinga::server::configs (
     group   => root,
     recurse => true,
     purge   => true,
+    force   => true,
     notify  => Class['icinga::server::services'],
   }
 
