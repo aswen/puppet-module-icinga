@@ -398,19 +398,19 @@ class icinga::server::configs (
   # if external commands are enabled some defaults should be changed:
   if $check_external_commands == 1 {
 
-    if $::operatingsystem == 'Debian' {
+    if $::osfamily == 'Debian' {
 
       exec { 'dpkg-icinga-override /var/lib/icinga':
         command => "dpkg-statoverride --update --add ${icinga_user} ${icinga_group} 751 /var/lib/icinga",
         unless  => "dpkg-statoverride --list ${icinga_user} ${icinga_group} 751 /var/lib/icinga",
-        path    => '/usr/sbin',
+        path    => ['/usr/sbin', '/usr/bin', '/sbin', '/bin'],
         notify  => Class['icinga::server::services'],
       }
 
       exec { 'dpkg-icinga-override /var/lib/icinga/rw':
         command => "dpkg-statoverride --update --add ${icinga_user} ${webserver_group} 2710 /var/lib/icinga/rw",
         unless  => "dpkg-statoverride --list ${icinga_user} ${webserver_group} 2710 /var/lib/icinga/rw",
-        path    => '/usr/sbin',
+        path    => ['/usr/sbin', '/usr/bin', '/sbin', '/bin'],
         notify  => Class['icinga::server::services'],
       }
 
